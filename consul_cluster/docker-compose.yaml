@@ -1,0 +1,85 @@
+# 编排php,redis,nginx容器
+version: "3.6" # 确定docker-composer文件的版本
+services: # 代表就是一组服务 - 简单来说一组容器
+  # consul server 是必须存在的，consul client 可选
+  # server
+  consul_server_172_10: # 这个表示服务的名称，可自定义; 注意不是容器名称
+    image: consul # 指定容器的镜像文件
+    container_name: consul_server_172_10 # 这是容器的名称
+    ports: # 配置容器与宿主机的端口
+      - 8510:8500
+    networks: ## 引入外部预先定义的网段
+      my_consul:
+        ipv4_address: 172.100.100.10   #设置ip地址
+    # -bind: 必须是容器内IP，否则 ipv4 not found
+    # -bootstrap-expect: 将服务器设置为预期引导模式。表示等待多少个节点再启动，如果等于1表示自己一个就可以启动了
+    command: consul agent -server -bootstrap-expect=3 -data-dir=/tmp/consul -node=consul_server_172_10 -bind=172.100.100.10 -ui -client=0.0.0.0
+  # server
+  consul_server_172_11: # 这个表示服务的名称，课自定义; 注意不是容器名称
+    image: consul # 指定容器的镜像文件
+    container_name: consul_server_172_11 # 这是容器的名称
+    ports: # 配置容器与宿主机的端口
+      - 8511:8500
+    networks: ## 要加入的网络，引用顶级结构中 「networks」下的键名
+      my_consul:
+        ipv4_address: 172.100.100.11   #设置ip地址
+    # -bind: 必须是容器内IP，否则 ipv4 not found
+    # -join: 通过领导者加入集群节点中
+    command: consul agent -server -data-dir=/tmp/consul -node=consul_server_172_11 -bind=172.100.100.11 -ui -client=0.0.0.0 -join 172.100.100.10
+    depends_on: # 必须要等 consul_server_172_10（默认领导者） 这个服务创建完再执行
+      - consul_server_172_10
+  # server
+  consul_server_172_12: # 这个表示服务的名称，课自定义; 注意不是容器名称
+    image: consul # 指定容器的镜像文件
+    container_name: consul_server_172_12 # 这是容器的名称
+    ports: # 配置容器与宿主机的端口
+      - 8512:8500
+    networks: ## 引入外部预先定义的网段
+      my_consul:
+        ipv4_address: 172.100.100.12   #设置ip地址
+    # -join: 通过领导者加入集群节点中
+    command: consul agent -server -data-dir=/tmp/consul -node=consul_server_172_12 -bind=172.100.100.12 -ui -client=0.0.0.0 -join 172.100.100.10
+    depends_on: # 必须要等 consul_server_172_10（默认领导者） 这个服务创建完再执行
+      - consul_server_172_10
+
+  # client
+  consul_client_172_21: # 这个表示服务的名称，课自定义; 注意不是容器名称
+    image: consul # 指定容器的镜像文件
+    container_name: consul_client_172_21 # 这是容器的名称
+    ports: # 配置容器与宿主机的端口
+      - 8521:8500
+    networks: ## 引入外部预先定义的网段
+      my_consul:
+        ipv4_address: 172.100.100.21   #设置ip地址
+    # -join: 通过领导者加入集群节点中
+    command: consul agent -data-dir=/tmp/consul -node=consul_client_172_21 -bind=172.100.100.21 -ui -client=172.100.100.21 -join 172.100.100.10
+    depends_on:
+      - consul_server_172_10
+  # client
+  consul_client_172_22: # 这个表示服务的名称，课自定义; 注意不是容器名称
+    image: consul # 指定容器的镜像文件
+    container_name: consul_client_172_22 # 这是容器的名称
+    ports: # 配置容器与宿主机的端口
+      - 8522:8500
+    networks: ## 引入外部预先定义的网段
+      my_consul:
+        ipv4_address: 172.100.100.22   #设置ip地址
+    # -join: 通过领导者加入集群节点中
+    command: consul agent -data-dir=/tmp/consul -node=consul_client_172_22 -bind=172.100.100.22 -ui -client=172.100.100.22 -join 172.100.100.10
+    depends_on:
+      - consul_server_172_10
+
+# 设置网络模块: 定义网络
+networks:
+  # docker-compose.yaml  执行成功过后，会在外部网络中创建 {docker-compose.yaml所在目录}_my_net 的网络名
+  my_consul:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.100.100.0/24
+
+# 设置网络模块: 引入外部网络
+#networks:
+#  my_consul: # 这是用于在 docker-compose 的代表当前网络
+#    external: # 引入外部网络
+#      name: my_consul # 外部网络的名称
