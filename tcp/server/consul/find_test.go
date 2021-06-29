@@ -2,6 +2,6 @@ package consul
 
 import "testing"
 
-func TestFindConsul(t *testing.T) {
+func TestAgentHealthServiceByName(t *testing.T) {
 	AgentHealthServiceByName()
 }

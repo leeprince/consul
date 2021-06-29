@@ -52,9 +52,9 @@ func AgentHealthServiceByName() (string, error) {
 		index = rand.Intn(len - 1)
 	}
 	service := outs[index].Service
-	host := fmt.Sprintf("http://%s:%d", service.Address, service.Port)
+	host := fmt.Sprintf("%s:%d", service.Address, service.Port)
 	fmt.Println("随机返回一个发现的服务", host)
 	
 	fmt.Println(aerr)
-	return "", nil
+	return host, nil
 }

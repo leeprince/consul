@@ -35,14 +35,14 @@ type Server struct {
 
 func init() {
 	// 注册服务：将此服务注册到 consul 中
-	ServiceRegister() // 官方 api
-	// ServiceRegisterByCustomer() // 自定义注册服务方法
+	serviceRegister() // 官方 api
+	// serviceRegisterByCustomer() // 自定义注册服务方法
 }
 
 /** consul 官方 api 注册服务方法
 注册服务：将此服务注册到 consul 中
  */
-func ServiceRegister() error {
+func serviceRegister() error {
 	consulConfig := &consulapi.Config{
 		Address:    consulHost,
 		Scheme:     "",
@@ -84,6 +84,7 @@ func ServiceRegister() error {
 		fmt.Println("注册服务到 consul 错误", aerr)
 		return aerr
 	}
+	fmt.Printf("注册服务成功：%s:%d \n", consulRegisterThisAddress, consulRegisterThisPort)
 	
 	return nil
 }
@@ -91,7 +92,7 @@ func ServiceRegister() error {
 /** 自定义注册服务方法
 注册服务：将此服务注册到 consul 中
 */
-func ServiceRegisterByCustomer() {
+func serviceRegisterByCustomer() error {
 	server := &Server{
 		ID:      consulRegisterThisId,
 		Name:    consulRegisterThisName,
@@ -101,8 +102,15 @@ func ServiceRegisterByCustomer() {
 	s, _ := json.Marshal(server) // bytes
 	url := fmt.Sprintf("%s%s", consulHost, consulRegisterPath)
 	req, _ := http.NewRequest("PUT", url, bytes.NewReader(s))
-	res, _ := http.DefaultClient.Do(req)
+	res, aerr := http.DefaultClient.Do(req)
+	if aerr != nil {
+		fmt.Println("注册服务到 consul 错误", aerr)
+		return aerr
+	}
 	defer res.Body.Close()
 	fmt.Println(res)
+	fmt.Printf("注册服务成功：%s:%d \n", consulRegisterThisAddress, consulRegisterThisPort)
+	
+	return nil
 }
 
