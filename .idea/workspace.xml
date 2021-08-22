@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e19da300-ef51-4930-b87c-5430f6dab01d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,9 +61,9 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="349" y="161" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1624704695034" />
-    <state x="87" y="282" width="674" height="486" key="find.popup" timestamp="1624888165826">
+    <state x="87" y="282" width="704" height="486" key="find.popup" timestamp="1625054791854">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="87" y="282" width="674" height="486" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1624888165826" />
+    <state x="87" y="282" width="704" height="486" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1625054791854" />
   </component>
 </project>

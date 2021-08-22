@@ -1,7 +1,10 @@
-## Consul 
+# 一、Consul 
 Consul 是一个支持多数据中心分布式高可用的服务发现和配置共享的服务软件
 
-### Consul提供的一些关键特性
+> 参考链接：https://github.com/hashicorp/consul
+> 文档链接：https://www.consul.io/docs
+
+## （一）Consul提供的一些关键特性
 ```
 service discovery：consul通过DNS或者HTTP接口使服务注册和服务发现变的很容易，一些外部服务
   
@@ -14,24 +17,24 @@ key/value storage：一个用来存储动态配置的系统。提供简单的HTT
   
 
 
-## 入门
+# 二、入门
 
-### 1. 运行 consul
-#### 1.1 官网运行 consul 入门
-##### 1.1.1 运行官网 consul 容器
-##### 1.1.2 运行成功后默认启动开发模式的 conusul agent
+## （一） 运行 consul
+### 1. 运行官网 consul 入门
+#### （1） 运行官网 consul 容器
+#### （2） 运行成功后默认启动开发模式的 conusul agent
 ```
 consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 0.0.0.0
 ```
 
 
-## 1.2 运行自定义的 consul 集群
-### docker-compose.yaml
+### 2. 运行自定义的 consul 集群
+#### （1）docker-compose.yaml
 ```
 consul_cluster/docker-compose.yaml
 ```
 
-### 2. 宿主机查看 ui: http://localhost:8500
+## （二）宿主机查看 ui: http://localhost:8500
 > consul 对外提供的端口，不同的端口有不同的作用
 
 | 端口           | 说明                    |
@@ -42,7 +45,7 @@ consul_cluster/docker-compose.yaml
 | 8500 | 8500 端口基于 HTTP 协议，用于 API 接口或 WEB UI 访问。     |
 | 8600 | 8600 端口作为 DNS 服务器，它使得我们可以通过节点名查询节点信息。     |
 
-#### 官网运行部分截图
+### 1. 官网运行部分截图
 **services**
 ![](./doc/default-services.png)
 
@@ -54,7 +57,7 @@ consul_cluster/docker-compose.yaml
 ![](./doc/default-nodes-default.png)
 
 
-#### ./consul_cluster 运行 consul 集群部分截图
+### 2. ./consul_cluster 运行 consul 集群部分截图
 **services**
 ![](./doc/cluster-services.png)
 
@@ -65,8 +68,9 @@ consul_cluster/docker-compose.yaml
 
 ![](./doc/cluster-nodes-consul_server_172_10.png)
 
-### 4. 使用 consul api 命令操作服务
-#### 添加服务
+## （三） 使用 consul api 命令操作服务
+> 参考链接：https://www.consul.io/api-docs/agent/service
+### 1. 添加服务
 > curl 请求示例
 > > Name: 必填项。其他非必填，当 ID 不填时默认 ID == Name
 > > 允许存在不同的ID, 相同的Name, ; 当创建相同的ID时会覆盖创建
@@ -108,56 +112,56 @@ $ go run main.go
 
 ![](./doc/cluster-nodes-consul_server_172_10-go-tcp-service.png)
 
-#### 查看所有服务
+### 2. 查看所有服务
 > curl 示例
 ```
 curl http://localhost:8500/v1/agent/services
 ```
 
-#### 查询服务-根据服务名查询
+### 3. 查询服务-根据服务名查询
 > curl 示例
 ```
 curl http://localhost:8500/v1/health/service/{服务名}
 ```
 
-#### 注销服务
+### 4. 注销服务
 > curl 示例
 ```
 curl -X PUT http://localhost:8500/v1/agent/service/deregister/{服务ID}
 ```
 
 
-#### key / value 存储
+### 5. key / value 存储
 
 有两种方式与 Consul KV 存储交互： Consul CLI 和 UI。 官网使用 CLI 的方式。 在本教程中，使用 Consul UI 的 Restful API 方式
 
 > Consul UI 的方式还可以直接在 localhost:8500 页面中操作
 
-##### 添加 key/value
+#### （1）添加 key/value
 > CURL 示例
 ```
 curl -X PUT -d '{vlaue}' http://localhost:8500/v1/kv/{key}
 ```
 
-#### 查看所有 key
+#### （2）查看所有 key
 > curl 示例
 ```
 curl http://localhost:8500/v1/kv/?recurse
 ```
 
-#### 查看单个 key
+#### （3）查看单个 key
 > curl 示例
 ```
 curl http://localhost:8500/v1/kv/{key}
 ```
 
-#### 修改 key/value
+#### （4）修改 key/value
 > curl 示例
 ```
 curl -X PUT -d '{value}' http://localhost:8500/v1/kv/{key}
 ```
 
-#### 删除 key
+#### （5）删除 key
 > curl 示例
 ```
 curl -X DELETE  http://localhost:8500/v1/kv/{key}
@@ -165,25 +169,46 @@ curl -X DELETE  http://localhost:8500/v1/kv/{key}
 
 
 
-### consul 命令说明
-#### 发现数据中心成员
+## （四）consul 命令操作
+
+### 1. 发现数据中心成员
 ```
 consul members [-detailed]
 ``` 
 
-#### 重启 consul
+### 2. 重启 consul
 ```
 consul reload
 ```
 
-#### 优雅地停止代理 consul agent
+### 3. 优雅地停止代理 consul agent
 ```
 consul leave
 ```
 
+### 4. 服务
+> 参考链接：https://www.consul.io/commands/services
+#### （1）查看服务列表
+```
+consul catalog services
+```
+
+#### （2）注册服务
+```
+consul services register -name=test
+```
 
 
-## 其他
+#### （3）注销服务
+```
+consul services deregister -id test
+```
+
+
+
+
+
+# 三、其他
 
 ### consul 集群架构.png
 ![consul 集群架构.png](./doc/consul%20集群架构.png)
