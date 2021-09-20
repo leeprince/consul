@@ -57,10 +57,10 @@
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="WindowStateProjectService">
-    <state x="349" y="161" key="SettingsEditor" timestamp="1624704695034">
+    <state x="349" y="161" key="SettingsEditor" timestamp="1629641125765">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="349" y="161" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1624704695034" />
+    <state x="349" y="161" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1629641125765" />
     <state x="87" y="282" width="704" height="486" key="find.popup" timestamp="1625054791854">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

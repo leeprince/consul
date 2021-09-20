@@ -170,6 +170,10 @@ curl -X DELETE  http://localhost:8500/v1/kv/{key}
 
 
 ## （四）consul 命令操作
+**命令格式**
+```
+Usage: consul [--version] [--help] <command> [<args>]
+```
 
 ### 1. 发现数据中心成员
 ```
@@ -188,6 +192,14 @@ consul leave
 
 ### 4. 服务
 > 参考链接：https://www.consul.io/commands/services
+
+**帮助命令**
+```
+1. consul --help services
+2. consul --help services register
+```
+
+
 #### （1）查看服务列表
 ```
 consul catalog services
